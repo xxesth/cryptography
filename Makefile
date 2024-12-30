@@ -1,8 +1,10 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -I./include
+CXXFLAGS = -std=c++17 -Wall -Wextra -I./include
 SRC_DIR = src
-OBJ_DIR = obj
-BIN_DIR = bin
+BUILD_DIR = build
+OBJ_DIR = $(BUILD_DIR)/obj
+BIN_DIR = $(BUILD_DIR)/bin
+DATA_DIR = data
 
 # Source files
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
@@ -17,6 +19,13 @@ all: directories $(TARGET)
 # Create necessary directories
 directories:
 	@mkdir -p $(OBJ_DIR) $(BIN_DIR)
+	@mkdir -p $(DATA_DIR)/input $(DATA_DIR)/output
+	@if [ ! -f $(DATA_DIR)/input/primes.txt ]; then \
+		echo "17 23" > $(DATA_DIR)/input/primes.txt; \
+	fi
+	@if [ ! -f $(DATA_DIR)/input/message.txt ]; then \
+		echo "Hello, RSA encryption!" > $(DATA_DIR)/input/message.txt; \
+	fi
 
 # Link object files to create executable
 $(TARGET): $(OBJS)
@@ -28,6 +37,14 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 # Clean build files
 clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
+	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean directories
+# Clean all generated files including data outputs
+cleanall: clean
+	rm -f $(DATA_DIR)/output/*
+
+# Run the program
+run: all
+	@$(TARGET)
+
+.PHONY: all clean cleanall run directories

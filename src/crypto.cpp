@@ -1,4 +1,4 @@
-#include "../include/crypto.hpp"
+#include "crypto/crypto.hpp"
 #include <fstream>
 #include <sstream>
 #include <cmath>
